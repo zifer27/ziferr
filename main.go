@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"os"
 )
 
-// Telegram config
 const (
 	BOT_TOKEN = "8453874511:AAGBTlqtNeSqLqyfMAA8BuE5SnVV04TmaZU"
 	CHAT_ID   = "7013997051"
@@ -36,8 +36,11 @@ func main() {
 		})
 	})
 
-	fmt.Println("Server running on port 8080")
-	http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	http.ListenAndServe(":"+port, nil)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -95,7 +98,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 		json.NewEncoder(w).Encode(response)
 
-		// Kirim notif sukses ke Telegram
 		processTime := time.Since(startTime)
 		notif := fmt.Sprintf(`✅ SUCCESS DOWNLOAD
 ━━━━━━━━━━━━━━━━
